@@ -1,0 +1,44 @@
+[
+    {
+        "label": "head",
+        "confidence": 0.7528226971626282,
+        "timestamp": "2026-03-15 21:22:13",
+        "image_path": "detections/alert_1773589933.jpg"
+    },
+    {
+        "label": "head",
+        "confidence": 0.7830668091773987,
+        "timestamp": "2026-03-15 21:23:29",
+        "image_path": "detections/alert_1773590009.jpg"
+    },
+    {
+        "label": "head",
+        "confidence": 0.7760602831840515,
+        "timestamp": "2026-03-15 21:33:53",
+        "image_path": "detections/alert_1773590633.jpg"
+    },
+    {
+        "label": "head",
+        "confidence": 0.8124109506607056,
+        "timestamp": "2026-03-21 16:49:02",
+        "image_path": "detections/alert_1774091942.jpg"
+    },
+    {
+        "label": "head",
+        "confidence": 0.8131735324859619,
+        "timestamp": "2026-03-21 16:50:50",
+        "image_path": "detections/alert_1774092050.jpg"
+    },
+    {
+        "label": "head",
+        "confidence": 0.8162524104118347,
+        "timestamp": "2026-03-21 16:51:17",
+        "image_path": "detections/alert_1774092077.jpg"
+    },
+    {
+        "label": "head",
+        "confidence": 0.8018224835395813,
+        "timestamp": "2026-03-22 09:58:10",
+        "image_path": "detections/alert_1774153690.jpg"
+    }
+]
