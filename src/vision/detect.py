@@ -17,7 +17,7 @@ HEAD_CLASSES = {"head"}
 BODY_CLASSES = {".", "0", "flank", "left_flank", "right_flank", "top"}
 
 HEAD_CONFIDENCE = 0.80
-BODY_CONFIDENCE = 0.60
+BODY_CONFIDENCE = 0.80
 ALERT_COOLDOWN = 15  # seconds
 
 last_alert = 0

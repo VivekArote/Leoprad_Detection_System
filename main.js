@@ -8,8 +8,8 @@ import { Telegraf } from 'telegraf';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// project root because main.js is inside src
-const ROOT_DIR = path.resolve(__dirname, '..');
+// project root because main.js is at the repository root
+const ROOT_DIR = path.resolve(__dirname);
 const LOGS_DIR = path.join(ROOT_DIR, 'logs');
 const LOG_FILE = path.join(LOGS_DIR, 'leopard_logs.json');
 
@@ -109,6 +109,17 @@ app.post('/detection', async (req, res) => {
     }
 
     res.status(200).json({ message: 'Detection processed' });
+});
+
+app.get('/', (req, res) => {
+    res.send(`
+        <h1>Leopard Detection Commander</h1>
+        <p>Server is running.</p>
+        <ul>
+            <li><strong>POST /detection</strong> - receive detection payloads</li>
+            <li><strong>GET /test-telegram</strong> - verify Telegram connectivity</li>
+        </ul>
+    `);
 });
 
 app.get('/test-telegram', async (req, res) => {

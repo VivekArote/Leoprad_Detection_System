@@ -154,5 +154,53 @@
         "confidence": 0.7052555084228516,
         "timestamp": "2026-03-23 12:40:53",
         "image_path": "detections/alert_1774249853.jpg"
+    },
+    {
+        "label": "leopard_body",
+        "confidence": 0.6204055547714233,
+        "timestamp": "2026-03-23 20:49:45",
+        "image_path": "detections/alert_1774279185.jpg"
+    },
+    {
+        "label": "leopard_body",
+        "confidence": 0.6775520443916321,
+        "timestamp": "2026-03-24 11:58:17",
+        "image_path": "detections/alert_1774333697.jpg"
+    },
+    {
+        "label": "leopard_body",
+        "confidence": 0.8147012591362,
+        "timestamp": "2026-03-24 11:59:32",
+        "image_path": "detections/alert_1774333772.jpg"
+    },
+    {
+        "label": "leopard_body",
+        "confidence": 0.6296977400779724,
+        "timestamp": "2026-03-24 12:00:35",
+        "image_path": "detections/alert_1774333835.jpg"
+    },
+    {
+        "label": "leopard_body",
+        "confidence": 0.6322457790374756,
+        "timestamp": "2026-03-24 12:00:51",
+        "image_path": "detections/alert_1774333851.jpg"
+    },
+    {
+        "label": "leopard_body",
+        "confidence": 0.7705672979354858,
+        "timestamp": "2026-03-24 12:01:07",
+        "image_path": "detections/alert_1774333867.jpg"
+    },
+    {
+        "label": "leopard_body",
+        "confidence": 0.8070552349090576,
+        "timestamp": "2026-03-24 12:01:22",
+        "image_path": "detections/alert_1774333882.jpg"
+    },
+    {
+        "label": "leopard_body",
+        "confidence": 0.811038076877594,
+        "timestamp": "2026-04-12 23:32:50",
+        "image_path": "detections/alert_1776016970.jpg"
     }
 ]
