@@ -13,14 +13,22 @@ import {
   Keyboard
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { useServer } from '../context/ServerContext';
 
 export default function LoginScreen() {
   const { login } = useAuth();
+  const { serverUrl, updateServerUrl } = useServer();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [serverInput, setServerInput] = useState(serverUrl);
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Sync state if serverUrl changes in context
+  React.useEffect(() => {
+    setServerInput(serverUrl);
+  }, [serverUrl]);
 
   const handleLogin = async () => {
     setError('');
@@ -30,8 +38,14 @@ export default function LoginScreen() {
       return;
     }
 
+    if (!serverInput.trim()) {
+      setError('VALIDATION ERROR: GATEWAY SERVER URL IS REQUIRED');
+      return;
+    }
+
     setLoading(true);
     try {
+      await updateServerUrl(serverInput.trim());
       await login(email.trim(), password, rememberMe);
     } catch (err) {
       setError(err.message?.toUpperCase() || 'LOGIN REJECTED: UNABLE TO VALIDATE CREDENTIALS');
@@ -60,6 +74,20 @@ export default function LoginScreen() {
                 <Text style={styles.errorText}>{error}</Text>
               </View>
             ) : null}
+
+            {/* Gateway Server IP field */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>GATEWAY SERVER URL</Text>
+              <TextInput
+                style={styles.input}
+                value={serverInput}
+                onChangeText={setServerInput}
+                placeholder="http://10.229.228.110:3000"
+                placeholderTextColor="#475569"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
 
             {/* Email field */}
             <View style={styles.inputGroup}>
