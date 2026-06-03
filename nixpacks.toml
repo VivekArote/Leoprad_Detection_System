@@ -1,5 +1,8 @@
 # Instruct Nixpacks to load the Node.js provider since there is no package.json in the root folder
 providers = ["node"]
 
+[phases.setup]
+nixpkgsArchive = '51ad838b03a05b1de6f9f2a0fffecee64a9788ee'
+
 [variables]
 NIXPACKS_NODE_VERSION = "22"
