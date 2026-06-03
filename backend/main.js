@@ -17,6 +17,7 @@
 
 import 'dotenv/config';
 import express from 'express';
+import { createServer } from 'http';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -38,6 +39,8 @@ import healthRoutes from './src/routes/health.routes.js';
 import { injectTelegramBot } from './src/controllers/detection.controller.js';
 import { injectTelegramForHealth } from './src/controllers/health.controller.js';
 
+import { initSocket } from './src/config/socket.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
 
@@ -54,8 +57,12 @@ if (!CHAT_IDS.length) {
     process.exit(1);
 }
 
-// ── Express app ───────────────────────────────────────────────────────────────
+// ── Express app & HTTP Server ─────────────────────────────────────────────────
 const app = express();
+const httpServer = createServer(app);
+
+// Initialize Socket.io
+initSocket(httpServer);
 
 // Enable CORS
 app.use(cors());
@@ -180,7 +187,7 @@ async function bootstrap() {
         });
     }
 
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
         logger.info(`🚀 Leopard Detection Server ready on http://localhost:${PORT}`);
         logger.info(`📊 Dashboard: http://localhost:${PORT}/dashboard`);
         logger.info(`🩺 Health:    http://localhost:${PORT}/health`);

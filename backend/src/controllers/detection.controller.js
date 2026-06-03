@@ -64,6 +64,16 @@ export async function createDetection(req, res) {
             detectionId = result.detectionId;
             imageUrl = result.imageUrl;
             resolvedImagePath = result.resolvedImagePath;
+
+            // Broadcast real-time Socket.io notification
+            if (result.detection) {
+                try {
+                    const { broadcastDetection } = await import('../config/socket.js');
+                    broadcastDetection(result.detection);
+                } catch (socketErr) {
+                    logger.error('❌ Socket broadcast failed', { error: socketErr.message });
+                }
+            }
         } catch (err) {
             logger.error('❌ Detection processing failed', { error: err.message });
         }
