@@ -5,7 +5,8 @@ import {
   View, 
   FlatList, 
   TouchableOpacity, 
-  ActivityIndicator 
+  ActivityIndicator,
+  ScrollView
 } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { getDetections } from '../api/detectionApi';
@@ -187,7 +188,6 @@ export default function DetectionsScreen({ navigation }) {
 }
 
 // Simple ScrollView mock since horizontal ScrollView is needed for filter badges
-import { ScrollView } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   container: {
