@@ -53,21 +53,17 @@ export async function processDetection(payload) {
 
     // ── Resolve local image path ──────────────────────────────────────────────
     let resolvedImagePath = null;
-    const isBase64 = payload.image_base64 || (payload.image_path && payload.image_path.startsWith('data:image/'));
-
-    if (!isBase64 && payload.image_path) {
+    if (payload.image_path) {
         resolvedImagePath = path.isAbsolute(payload.image_path)
             ? payload.image_path
             : path.join(ROOT_DIR, payload.image_path);
     }
 
     // ── Upload to Cloudinary ──────────────────────────────────────────────────
-    const imageToUpload = isBase64 ? (payload.image_base64 || payload.image_path) : resolvedImagePath;
-
-    if (imageToUpload && (isBase64 || existsSync(imageToUpload))) {
+    if (resolvedImagePath && existsSync(resolvedImagePath)) {
         try {
             const uploaded = await cloudinaryService.uploadDetectionImage(
-                imageToUpload,
+                resolvedImagePath,
                 cameraId,
                 detectionId
             );
@@ -79,10 +75,8 @@ export async function processDetection(payload) {
                 url: imageUrl,
             });
 
-            // Delete temporary local file after successful upload (only for files)
-            if (!isBase64) {
-                cloudinaryService.deleteLocalFile(imageToUpload);
-            }
+            // Delete temporary local file after successful upload
+            cloudinaryService.deleteLocalFile(resolvedImagePath);
         } catch (uploadErr) {
             detectionLogger.error('❌ Cloudinary upload failed', {
                 detectionId,
