@@ -41,16 +41,18 @@ function resolveCameraFolder(cameraId) {
  * @throws {Error} If the file does not exist or the upload fails.
  */
 export async function uploadDetectionImage(localPath, cameraId = 'camera-01', publicIdPrefix = null) {
-    if (!existsSync(localPath)) {
+    const isBase64 = localPath && typeof localPath === 'string' && localPath.startsWith('data:image/');
+
+    if (!isBase64 && !existsSync(localPath)) {
         throw new Error(`Image file not found: ${localPath}`);
     }
 
     const folder = resolveCameraFolder(cameraId);
-    const fileName = path.basename(localPath, path.extname(localPath));
+    const fileName = isBase64 ? `base64-${Date.now()}` : path.basename(localPath, path.extname(localPath));
     // public_id must NOT contain slashes — folder is set separately
     const publicId = publicIdPrefix || fileName;
 
-    logger.info('☁️  Uploading image to Cloudinary', { localPath, folder, publicId });
+    logger.info('☁️  Uploading image to Cloudinary', { localPath: isBase64 ? '[base64]' : localPath, folder, publicId });
 
     const result = await cloudinary.uploader.upload(localPath, {
         folder,

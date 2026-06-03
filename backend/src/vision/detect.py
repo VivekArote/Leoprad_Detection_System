@@ -18,6 +18,7 @@ import os
 import threading
 from ultralytics import YOLO
 from dotenv import load_dotenv
+import base64
 
 # =========================
 # CONFIG
@@ -157,11 +158,21 @@ while cap.isOpened():
         img_path = os.path.join(DETECTIONS_DIR, img_name)
         cv2.imwrite(img_path, annotated_frame)
 
+        # Base64 encode the image to send it over HTTP to the remote backend
+        image_base64 = None
+        try:
+            with open(img_path, "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+                image_base64 = f"data:image/jpeg;base64,{encoded_string}"
+        except Exception as e:
+            print(f"⚠️ Failed to base64 encode image: {e}")
+
         payload = {
             "label":           detected_label,
             "confidence":      detected_conf,
             "timestamp":       time.strftime("%Y-%m-%d %H:%M:%S"),
             "image_path":      f"detections/{img_name}",
+            "image_base64":    image_base64,
             # New fields used by the enhanced server (ignored gracefully by the old one)
             "camera_id":       CAMERA_ID,
             "camera_location": CAMERA_LOCATION,
