@@ -32,7 +32,10 @@ const Modal = ({ isOpen, onClose, detection, onDelete }) => {
 
   const formatTime = (isoString) => {
     if (!isoString) return '—';
-    return new Date(isoString).toISOString().replace('T', ' ').substring(0, 19);
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return '—';
+    const pad = (num) => String(num).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
   };
 
   const getBBoxOverlayStyle = () => {
