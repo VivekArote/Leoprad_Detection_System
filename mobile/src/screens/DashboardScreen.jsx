@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -6,12 +5,14 @@ import {
   ScrollView, 
   RefreshControl,
   Image, 
-  TouchableOpacity 
+  TouchableOpacity,
+  TextInput
 } from 'react-native';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getDetections } from '../api/detectionApi';
 import { getHealth } from '../api/healthApi';
 import { useServer } from '../context/ServerContext';
+import { useAuth } from '../context/AuthContext';
 import StatusCard from '../components/StatusCard';
 import DetectionCard from '../components/DetectionCard';
 import LoadingView from '../components/LoadingView';
@@ -19,7 +20,16 @@ import ErrorState from '../components/ErrorState';
 
 export default function DashboardScreen({ navigation }) {
   const queryClient = useQueryClient();
-  const { connectionStatus, serverUrl } = useServer();
+  const { connectionStatus, serverUrl, updateServerUrl } = useServer();
+  const { logout } = useAuth();
+  
+  const [newIp, setNewIp] = React.useState(serverUrl);
+  const [updating, setUpdating] = React.useState(false);
+
+  // Keep newIp in sync when serverUrl loads
+  React.useEffect(() => {
+    setNewIp(serverUrl);
+  }, [serverUrl]);
 
   // 1. Fetch system health diagnostics
   const { 
@@ -68,12 +78,56 @@ export default function DashboardScreen({ navigation }) {
   }
 
   if (isError) {
+    const handleUpdateIp = async () => {
+      if (!newIp.trim()) return;
+      setUpdating(true);
+      try {
+        await updateServerUrl(newIp.trim());
+        handleRefresh();
+      } catch (err) {
+        console.error('Failed to change server IP', err);
+      } finally {
+        setUpdating(false);
+      }
+    };
+
     return (
       <View style={styles.errorWrapper}>
         <ErrorState 
           message="Server connection failed. Verify server URL." 
           onRetry={handleRefresh} 
         />
+        
+        <View style={styles.ipPanel}>
+          <Text style={styles.ipLabel}>MODIFY GATEWAY SERVER URL</Text>
+          <TextInput
+            style={styles.ipInput}
+            value={newIp}
+            onChangeText={setNewIp}
+            placeholder="http://10.229.228.110:3000"
+            placeholderTextColor="#475569"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TouchableOpacity 
+            style={styles.ipBtn} 
+            onPress={handleUpdateIp}
+            disabled={updating}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.ipBtnText}>
+              {updating ? 'SAVING TELEMETRY CONFIG...' : 'UPDATE GATEWAY URL'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.logoutErrorBtn} 
+            onPress={logout}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.logoutErrorText}>RESET ACTIVE SESSION</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -316,5 +370,56 @@ const styles = StyleSheet.create({
     color: '#475569',
     textAlign: 'center',
     paddingVertical: 12,
+  },
+  ipPanel: {
+    marginTop: 20,
+    backgroundColor: '#0f172a',
+    borderWidth: 1,
+    borderColor: '#1e293b',
+    padding: 12,
+  },
+  ipLabel: {
+    fontFamily: 'monospace',
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: '#94a3b8',
+    marginBottom: 8,
+    letterSpacing: 1,
+  },
+  ipInput: {
+    fontFamily: 'monospace',
+    fontSize: 11,
+    color: '#f8fafc',
+    backgroundColor: '#090d16',
+    borderWidth: 1,
+    borderColor: '#334155',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginBottom: 10,
+  },
+  ipBtn: {
+    backgroundColor: '#1e293b',
+    borderWidth: 1,
+    borderColor: '#38bdf8',
+    paddingVertical: 10,
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  ipBtnText: {
+    fontFamily: 'monospace',
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: '#38bdf8',
+    letterSpacing: 1,
+  },
+  logoutErrorBtn: {
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  logoutErrorText: {
+    fontFamily: 'monospace',
+    fontSize: 8.5,
+    fontWeight: 'bold',
+    color: '#ef4444',
   },
 });
