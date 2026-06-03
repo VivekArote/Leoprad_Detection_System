@@ -1,0 +1,25 @@
+# Python / vision pipeline — stays on field machine, never deployed
+backend/src/vision/
+backend/src/hardware/
+
+# Local detection images — temporary files, not needed on server
+backend/detections/
+detections/
+
+# Python virtualenv
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs — Railway captures stdout, file logs not needed
+backend/logs/
+backend/src/logs/
+
+# Mobile app — separate Expo project, not part of backend
+mobile/
+
+# Dev files
+.vscode/
+*.log
+coverage/

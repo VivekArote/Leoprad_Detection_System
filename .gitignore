@@ -1,4 +1,11 @@
 node_modules/
-__pycache__/
-*.jpg
 .env
+logs/
+coverage/
+dist/
+build/
+*.log
+detections/
+__pycache__/
+*.pyc
+.venv/
