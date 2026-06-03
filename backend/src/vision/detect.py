@@ -17,6 +17,7 @@ import time
 import os
 import threading
 from ultralytics import YOLO
+from dotenv import load_dotenv
 
 # =========================
 # CONFIG
@@ -25,9 +26,12 @@ SCRIPT_DIR    = os.path.dirname(os.path.abspath(__file__))
 BACKEND_DIR   = os.path.dirname(os.path.dirname(SCRIPT_DIR))
 DETECTIONS_DIR = os.path.join(BACKEND_DIR, 'detections')
 
+# Load .env file from the backend folder
+load_dotenv(os.path.join(BACKEND_DIR, '.env'))
+
 MODEL_PATH    = os.path.join(SCRIPT_DIR, 'best.pt')
 ARDUINO_PORT  = os.environ.get('ARDUINO_PORT', 'COM3')
-NODE_URL      = "http://localhost:3000/detection"
+NODE_URL      = os.environ.get('NODE_URL', 'http://localhost:3000/detection')
 CAMERA_ID     = os.environ.get('CAMERA_ID', 'camera-01')
 CAMERA_LOCATION = os.environ.get('CAMERA_LOCATION', 'Unknown')
 
@@ -43,14 +47,20 @@ last_alert = 0
 # =========================
 # INIT
 # =========================
+arduino = None
 try:
     arduino = serial.Serial(ARDUINO_PORT, 9600, timeout=1)
     time.sleep(2)
+    print("✅ Arduino connected successfully")
+except Exception as e:
+    print(f"⚠️ Arduino connection failed: {e}. Running without hardware alert.")
+
+try:
     model = YOLO(MODEL_PATH)
     print("Model classes:", model.names)
-    print("✅ Model and Arduino connected successfully")
+    print("✅ YOLO Model loaded successfully")
 except Exception as e:
-    print(f"❌ Error during initialization: {e}")
+    print(f"❌ Model initialization failed: {e}")
     exit()
 
 
@@ -138,7 +148,8 @@ while cap.isOpened():
         last_alert = now
 
         try:
-            arduino.write(b'H')
+            if arduino:
+                arduino.write(b'H')
         except Exception as e:
             print(f"Arduino write failed: {e}")
 

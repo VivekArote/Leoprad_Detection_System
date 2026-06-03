@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider as PaperProvider, MD3DarkTheme } from 'react-native-paper';
 import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 import { AuthProvider } from './src/context/AuthContext';
 import { ServerProvider } from './src/context/ServerContext';
@@ -68,7 +69,12 @@ export default function App() {
       }
 
       try {
-        const token = (await Notifications.getExpoPushTokenAsync()).data;
+        const projectId = Constants.expoConfig?.extra?.eas?.projectId ?? Constants.easConfig?.projectId;
+        if (!projectId) {
+          console.warn('Push Notifications disabled in this environment: No projectId found.');
+          return;
+        }
+        const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
         console.log('📬 Expo Push Token Registered:', token);
         // Note: You can POST this token to your backend "/api/notifications/register"
         // to associate it with this device and trigger native remote notifications.
