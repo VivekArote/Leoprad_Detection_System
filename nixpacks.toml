@@ -1,0 +1,2 @@
+# Instruct Nixpacks to load the Node.js provider since there is no package.json in the root folder
+providers = ["node"]
