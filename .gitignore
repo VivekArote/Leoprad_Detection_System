@@ -9,3 +9,31 @@ detections/
 __pycache__/
 *.pyc
 .venv/
+
+# IDEs and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Virtual environment variants
+venv/
+env/
+ENV/
+
+# Machine learning model weights and artifacts
+*.pt
+*.pth
+*.onnx
+*.h5
+weights/
+runs/
+
+# Databases and local data
+*.sqlite3
+*.db
+
+# Mobile / build artifacts
+ios/
+android/
+.expo/

@@ -39,3 +39,22 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Editor and environment
+.vscode/
+.idea/
+.venv/
+venv/
+
+# Machine learning artifacts
+*.pt
+*.pth
+*.onnx
+*.h5
+weights/
+runs/
+
+# Databases and logs
+*.sqlite3
+*.db
+*.log
