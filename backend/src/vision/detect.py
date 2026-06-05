@@ -14,6 +14,7 @@ import cv2
 import serial
 import requests
 import time
+import datetime
 import os
 import threading
 from ultralytics import YOLO
@@ -160,7 +161,7 @@ while cap.isOpened():
         payload = {
             "label":           detected_label,
             "confidence":      detected_conf,
-            "timestamp":       time.strftime("%Y-%m-%d %H:%M:%S"),
+            "timestamp":       datetime.datetime.now().astimezone().isoformat(),
             "image_path":      f"detections/{img_name}",
             # New fields used by the enhanced server (ignored gracefully by the old one)
             "camera_id":       CAMERA_ID,
